@@ -2,6 +2,8 @@
 
 Backend server for Ayutra authentication and API endpoints.
 
+🌐 **Live Application**: [https://ayutra.vercel.app](https://ayutra.vercel.app)
+
 ## 🚀 Quick Start
 
 ### 1. Install Dependencies
@@ -42,11 +44,7 @@ The server will start on `http://localhost:3000`
 POST /api/auth/login
 Content-Type: application/json
 
-{
-  "email": "admin@ayurdiet.com",
-  "password": "admin123",
-  "role": "Admin"
-}
+
 ```
 
 #### Register
@@ -88,22 +86,7 @@ Authorization: Bearer {token}
 
 The backend comes with pre-configured test users:
 
-### Admin
-- **Email:** `admin@ayurdiet.com`
-- **Password:** `admin123`
-- **Role:** Admin
 
-### Practitioner
-- **Email:** `practitioner@ayurdiet.com`
-- **Password:** `practitioner123`
-- **Role:** Practitioner
-
-### Patient
-- **Email:** `patient@ayurdiet.com`
-- **Password:** `patient123`
-- **Role:** Patient
-
-## 🛠️ Development
 
 ### Project Structure
 
