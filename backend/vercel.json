@@ -4,17 +4,9 @@
         {
             "src": "server.js",
             "use": "@vercel/node"
-        },
-        {
-            "src": "ml_service/main.py",
-            "use": "@vercel/python"
         }
     ],
     "routes": [
-        {
-            "src": "/api/model/(.*)",
-            "dest": "ml_service/main.py"
-        },
         {
             "src": "/(.*)",
             "dest": "server.js"
