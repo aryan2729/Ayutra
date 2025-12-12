@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import User from '../models/User.js';
 
 
+import { connectDB } from '../config/database.js';
+
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
 const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-key-change-in-production';
@@ -29,18 +31,8 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    // Check MongoDB connection
-    if (mongoose.connection.readyState !== 1) {
-      console.error('❌ MongoDB not connected!');
-      return res.status(500).json({
-        success: false,
-        error: {
-          message: 'Database connection error',
-          code: 'DB_ERROR',
-          status: 500
-        }
-      });
-    }
+    // Ensure MongoDB connection
+    await connectDB();
 
     // Find user by email or username using MongoDB
     console.log('🔍 Searching for user...');
@@ -57,7 +49,7 @@ router.post('/login', async (req, res) => {
         }
       });
     }
-    
+
     console.log('✅ User found:', user.email);
 
     // Check if user is active
@@ -102,19 +94,19 @@ router.post('/login', async (req, res) => {
 
     // Generate tokens using MongoDB _id
     const token = jwt.sign(
-      { 
-        id: user._id.toString(), 
-        email: user.email, 
-        role: user.role 
+      {
+        id: user._id.toString(),
+        email: user.email,
+        role: user.role
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
 
     const refreshToken = jwt.sign(
-      { 
-        id: user._id.toString(), 
-        type: 'refresh' 
+      {
+        id: user._id.toString(),
+        type: 'refresh'
       },
       JWT_REFRESH_SECRET,
       { expiresIn: JWT_REFRESH_EXPIRES_IN }
@@ -172,18 +164,8 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Check MongoDB connection
-    if (mongoose.connection.readyState !== 1) {
-      console.error('❌ MongoDB not connected!');
-      return res.status(500).json({
-        success: false,
-        error: {
-          message: 'Database connection error',
-          code: 'DB_ERROR',
-          status: 500
-        }
-      });
-    }
+    // Ensure MongoDB connection
+    await connectDB();
 
     // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
@@ -208,24 +190,24 @@ router.post('/register', async (req, res) => {
       role,
       image: null,
     });
-    
+
     console.log('✅ User created successfully:', newUser.email, newUser._id);
 
     // Generate tokens using MongoDB _id
     const token = jwt.sign(
-      { 
-        id: newUser._id.toString(), 
-        email: newUser.email, 
-        role: newUser.role 
+      {
+        id: newUser._id.toString(),
+        email: newUser.email,
+        role: newUser.role
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
     );
 
     const refreshToken = jwt.sign(
-      { 
-        id: newUser._id.toString(), 
-        type: 'refresh' 
+      {
+        id: newUser._id.toString(),
+        type: 'refresh'
       },
       JWT_REFRESH_SECRET,
       { expiresIn: JWT_REFRESH_EXPIRES_IN }
@@ -249,7 +231,7 @@ router.post('/register', async (req, res) => {
     console.error('❌ Register error:', error);
     console.error('Error details:', error.message);
     console.error('Stack:', error.stack);
-    
+
     // Handle MongoDB validation errors
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(err => err.message);
@@ -262,7 +244,7 @@ router.post('/register', async (req, res) => {
         }
       });
     }
-    
+
     res.status(500).json({
       success: false,
       error: {
@@ -291,7 +273,7 @@ router.post('/logout', (req, res) => {
  * POST /api/auth/refresh
  * Refresh access token using refresh token
  */
-router.post('/refresh',async (req, res) => {
+router.post('/refresh', async (req, res) => {
   try {
     const { refreshToken } = req.body;
 
@@ -324,10 +306,10 @@ router.post('/refresh',async (req, res) => {
 
     // Generate new access token
     const token = jwt.sign(
-      { 
-        id: user._id.toString(), 
-        email: user.email, 
-        role: user.role 
+      {
+        id: user._id.toString(),
+        email: user.email,
+        role: user.role
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN }
@@ -335,9 +317,9 @@ router.post('/refresh',async (req, res) => {
 
     // Optionally generate new refresh token
     const newRefreshToken = jwt.sign(
-      { 
-        id: user._id.toString(), 
-        type: 'refresh' 
+      {
+        id: user._id.toString(),
+        type: 'refresh'
       },
       JWT_REFRESH_SECRET,
       { expiresIn: JWT_REFRESH_EXPIRES_IN }
