@@ -27,11 +27,11 @@ const Header = ({ className = '' }) => {
   // Show Remedies only for patients
   const navigationItems = allNavigationItems.filter(item => {
     if (!user || !user.role) return true; // Show all if user not loaded
-    
+
     const userRole = String(user.role).toLowerCase();
     const isPractitioner = userRole === 'practitioner' || userRole === 'admin';
     const isPatient = userRole === 'patient';
-    
+
     // Hide AI Diet Generator for patients
     if (isPatient && item.path === '/ai-diet-generator') {
       return false;
@@ -61,11 +61,11 @@ const Header = ({ className = '' }) => {
   // Show Remedies only for patients
   const secondaryItems = allSecondaryItems.filter(item => {
     if (!user || !user.role) return true; // Show all if user not loaded
-    
+
     const userRole = String(user.role).toLowerCase();
     const isPractitioner = userRole === 'practitioner' || userRole === 'admin';
     const isPatient = userRole === 'patient';
-    
+
     if (isPractitioner && item.path === '/progress-analytics') {
       return false;
     }
@@ -115,17 +115,16 @@ const Header = ({ className = '' }) => {
               <Link
                 key={item?.path}
                 to={item?.path}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-smooth ${
-                  isActivePath(item?.path)
-                    ? 'bg-primary text-primary-foreground shadow-organic'
-                    : 'text-text-secondary hover:text-text-primary hover:bg-muted'
-                }`}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-smooth ${isActivePath(item?.path)
+                  ? 'bg-primary text-primary-foreground shadow-organic'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-muted'
+                  }`}
               >
                 <Icon name={item?.icon} size={16} />
                 <span>{item?.name}</span>
               </Link>
             ))}
-            
+
             {/* More Menu */}
             <div className="relative group">
               <Button
@@ -136,18 +135,17 @@ const Header = ({ className = '' }) => {
                 <Icon name="MoreHorizontal" size={16} />
                 <span>More</span>
               </Button>
-              
+
               <div className="absolute right-0 top-full mt-1 w-48 bg-popover border border-border rounded-md shadow-organic opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-smooth">
                 <div className="py-1">
                   {secondaryItems?.map((item) => (
                     <Link
                       key={item?.path}
                       to={item?.path}
-                      className={`flex items-center space-x-2 px-3 py-2 text-sm transition-smooth ${
-                        isActivePath(item?.path)
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-text-secondary hover:text-text-primary hover:bg-muted'
-                      }`}
+                      className={`flex items-center space-x-2 px-3 py-2 text-sm transition-smooth ${isActivePath(item?.path)
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-text-secondary hover:text-text-primary hover:bg-muted'
+                        }`}
                     >
                       <Icon name={item?.icon} size={16} />
                       <span>{item?.name}</span>
@@ -161,12 +159,6 @@ const Header = ({ className = '' }) => {
           {/* User Actions - Desktop */}
           <div className="hidden lg:flex items-center space-x-2">
             <DarkModeToggle />
-            <Button variant="outline" size="sm">
-              <Icon name="Bell" size={16} />
-            </Button>
-            <Button variant="outline" size="sm">
-              <Icon name="User" size={16} />
-            </Button>
           </div>
 
           {/* Mobile Actions */}
@@ -191,29 +183,17 @@ const Header = ({ className = '' }) => {
                   key={item?.path}
                   to={item?.path}
                   onClick={closeMobileMenu}
-                  className={`flex items-center space-x-3 px-3 py-3 rounded-md text-sm font-medium transition-smooth ${
-                    isActivePath(item?.path)
-                      ? 'bg-primary text-primary-foreground shadow-organic'
-                      : 'text-text-secondary hover:text-text-primary hover:bg-muted'
-                  }`}
+                  className={`flex items-center space-x-3 px-3 py-3 rounded-md text-sm font-medium transition-smooth ${isActivePath(item?.path)
+                    ? 'bg-primary text-primary-foreground shadow-organic'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-muted'
+                    }`}
                 >
                   <Icon name={item?.icon} size={18} />
                   <span>{item?.name}</span>
                 </Link>
               ))}
-              
-              <div className="pt-3 mt-3 border-t border-border space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Button variant="outline" size="sm" fullWidth>
-                    <Icon name="Bell" size={16} />
-                    <span className="ml-2">Notifications</span>
-                  </Button>
-                  <Button variant="outline" size="sm" fullWidth>
-                    <Icon name="User" size={16} />
-                    <span className="ml-2">Profile</span>
-                  </Button>
-                </div>
-              </div>
+
+
             </div>
           </div>
         )}
